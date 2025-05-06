@@ -64,7 +64,7 @@ export function Dashboard() {
   }, [movimientos])
 
   useEffect(() => {
-    const now = new Date()
+    const now = new Date() // Cambia esto a new Date() para producción
     const currentYear = now.getFullYear()
     const currentMonth = now.getMonth()
 
@@ -90,7 +90,7 @@ export function Dashboard() {
     })
 
     setMonthlyTransactions(filtered)
-  }, [fetchedTransactions])
+  }, [fetchedTransactions, ])
 
   useEffect(() => {
     if (!loading && !user) {
@@ -133,8 +133,9 @@ export function Dashboard() {
   const totalIngresos = fetchedTransactions.filter((t) => t.type === "ingreso").reduce((sum, t) => sum + t.amount, 0)
   const totalGastos = fetchedTransactions.filter((t) => t.type === "gasto").reduce((sum, t) => sum + t.amount, 0)
   const saldoActual = totalIngresos - totalGastos
+  
+  const monthlyTotalIngresos = monthlyTransactions.filter((t) => t.type === "ingreso").reduce((sum, t) => sum + t.amount, 0)
   const monthlyTotalGastos = monthlyTransactions.filter((t) => t.type === "gasto").reduce((sum, t) => sum + t.amount, 0)
-
   const porcentajeGastado = userData.limiteGastos ? (monthlyTotalGastos / userData.limiteGastos) * 100 : 0
   const restanteParaLimite = userData.limiteGastos ? Math.max(0, userData.limiteGastos - monthlyTotalGastos) : 0
 
@@ -168,15 +169,15 @@ export function Dashboard() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Total ingresos</CardDescription>
-                <CardTitle className="text-green-600">{formatCurrency(totalIngresos)}</CardTitle>
+                <CardDescription>Total ingresos este mes</CardDescription>
+                <CardTitle className="text-green-600">{formatCurrency(monthlyTotalIngresos)}</CardTitle>
               </CardHeader>
             </Card>
 
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Total gastos</CardDescription>
-                <CardTitle className="text-red-600">{formatCurrency(totalGastos)}</CardTitle>
+                <CardDescription>Total gastos este mes</CardDescription>
+                <CardTitle className="text-red-600">{formatCurrency(monthlyTotalGastos)}</CardTitle>
               </CardHeader>
             </Card>
           </div>
